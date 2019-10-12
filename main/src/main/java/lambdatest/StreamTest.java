@@ -1,51 +1,49 @@
 package lambdatest;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 public class StreamTest {
 
 
     public static void main(String[] args) {
-        List<Person> persons = Arrays.asList(
-                new Person("ricky", 30),
-                new Person("jack", 20),
-                new Person("lawrence", 40)
-        );
-//
-//        Person result1 = persons.stream()                        // Convert to steam
-//                .filter(x -> "jack".equals(x.getName()))        // we want "jack" only
-//                .findAny()                                      // If 'findAny' then return found
-//                .orElse(null);                                  // If not found, return null
-//
-//        System.out.println(result1.toString());
-//
-//        Person result2 = persons.stream()
-//                .filter(x -> "ahmook".equals(x.getName()))
-//                .findAny()
-//                .orElse( new Person("ahmook", 30));
-//
-//        System.out.println(result2.toString());
+        Map<Currency, List<Transaction>> transactionsByCurrencies = new HashMap<>();
+        List<Transaction> transactionList=new ArrayList<Transaction>();
+        Transaction transaction=new Transaction();
+        transaction.setOrderId("0460000001");
+        transaction.setCurrency(new Currency("RMB"));
+        transaction.setMoney(1001L);
+        transactionList.add(transaction);
+        transaction=new Transaction();
+        transaction.setOrderId("0460000002");
+        transaction.setCurrency(new Currency("RMB2"));
+        transaction.setMoney(1003L);
+        transactionList.add(transaction);
+        transaction=new Transaction();
+        transaction.setOrderId("0460000003");
+        transaction.setCurrency(new Currency("RMB3"));
+        transaction.setMoney(999L);
+        transactionList.add(transaction);
 
-       persons = Arrays.asList(
-                new Person("ricky", 30),
-                new Person("jack", 20),
-                new Person("lawrence", 40)
-        );
 
-        String name = persons.stream()
-                .filter(x -> "jack".equals(x.getName()))
-                .map(Person::getName)                        //convert stream to String
-                .findAny()
-                .orElse("");
+        /** 版本1 **/
+        for (Transaction transaction_temp : transactionList) {
+            if(transaction_temp.getMoney() > 1000){
+                Currency currency=transaction_temp.getCurrency();
+                List<Transaction> transactionsForCurrency=transactionsByCurrencies.get(currency);
+                if(transactionsForCurrency==null){
+                    transactionsForCurrency=new ArrayList<Transaction>();
+                    transactionsByCurrencies.put(currency,transactionsForCurrency);
+                }
+                transactionsForCurrency.add(transaction_temp);
+            }
+        }
 
-        System.out.println("name : " + name);
-
-        List<Integer> collect = persons.stream()
-                .map(Person::getAge)
-                .collect(Collectors.toList());
-
-        collect.forEach(System.out::println);
+        System.out.println(transactionsByCurrencies);
+        /** 版本2 **/
+        Map<Currency, Transaction> transactionsByCurrencies2 =transactionList.stream().filter((Transaction t) -> t.getMoney() > 1000).collect(Collectors.toMap(Transaction::getCurrency, Function.identity()));
+        System.out.println(transactionsByCurrencies2);
     }
 }

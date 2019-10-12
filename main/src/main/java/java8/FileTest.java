@@ -1,9 +1,12 @@
-package io;
+package java8;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
 
+/**
+ * 方法和Lambda作为一等
+ */
 public class FileTest {
     public static void main(String[] args) {
         ishide();
