@@ -14,5 +14,7 @@ import java.util.List;
 public class StreamFilter {
     public static void main(String[] args) {
         List<Dish> menu= CreateData.createMenu();
+        long count=menu.stream().filter(i->i.getCalories()>100).count();
+        System.out.println(count);
     }
 }
