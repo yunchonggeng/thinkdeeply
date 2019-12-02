@@ -1,5 +1,7 @@
-package lambdatest.stream;
+package lambdatest.stream.paralle;
 
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.function.Function;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -18,6 +20,7 @@ public class ParallelStreams {
         System.out.println("rangeS sum done in :"+measureSumPerf(ParallelStreams::rangeSum,10_000_000)+" msecs");
         System.out.println("paralleRanged sum done in :"+measureSumPerf(ParallelStreams::paralleRangedSum,10_000_000)+" msecs");
         System.out.println("SideEffect parallel sum done in: " + measureSumPerf(ParallelStreams::sideEffectParallelSum, 10_000_000L) +" msecs" );
+        System.out.println("forkJoinSum parallel sum done in: " + measureSumPerf(ParallelStreams::forkJoinSum, 10_000_000L) +" msecs" );
     }
 
     public static long sequentialSum(long n){
@@ -58,6 +61,12 @@ public class ParallelStreams {
     public static class Accumulator {
         public long total = 0;
         public void add(long value) { total += value; }
+    }
+
+    public static long forkJoinSum(long n){
+        long[] numbers=LongStream.rangeClosed(1,n).toArray();
+        ForkJoinTask<Long> task=new ForkJoinSumCulator(numbers);
+        return new ForkJoinPool().invoke(task);
     }
 
     /**
