@@ -40,7 +40,18 @@ public class Ttest{
 //
 //
 //        System.out.println(foo3.get(0));
+        Ttest ttest=new Ttest();
+        Long a=123L;
+        Runnable runnable = () -> {
+            ttest.sum(a, 2L);
+        };
 
+    }
+
+
+
+    public long sum(Long a,Long b){
+        return a+b;
     }
 
 }

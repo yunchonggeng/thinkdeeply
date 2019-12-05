@@ -65,6 +65,7 @@ public class ParallelStreams {
 
     public static long forkJoinSum(long n){
         long[] numbers=LongStream.rangeClosed(1,n).toArray();
+        //iterate 生成的是装箱的对象，必须拆箱成数字才能求和
         ForkJoinTask<Long> task=new ForkJoinSumCulator(numbers);
         return new ForkJoinPool().invoke(task);
     }
